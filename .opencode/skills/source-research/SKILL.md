@@ -1,6 +1,6 @@
 ---
 name: source-research
-description: Finds and verifies sources for a study guide using Context7 and web search, then distills them into sources.md (verified references) and notes.md (commands, versions, flags, concepts and pitfalls in the agent's own words). Use in the RESEARCH phase, after the interview and before the plan, and again whenever a fact needed to write is missing from notes.md.
+description: Finds and verifies sources for a study guide using Context7 and web search, then distills them into sources.md (verified references) and notes.md (commands, versions, flags, concepts and pitfalls in the agent's own words), both in agent-mem. Use in the RESEARCH phase, after the interview and before the plan, and again whenever a fact needed to write is missing from notes.md.
 ---
 
 # Why this skill matters
@@ -8,8 +8,8 @@ The guide must be self-contained: the learner will not open links. Everything
 the guide teaches comes from `notes.md`, so research quality decides guide quality.
 
 # Preconditions
-- Read `profile.md` and `state.md`. The phase must be RESEARCH (or you were
-  sent here by a missing fact during EXPANSION).
+- Read `agent-mem/<slug>/profile.md` and `state.md`. The phase must be RESEARCH
+  (or you were sent here by a missing fact during EXPANSION).
 - If `sources.md` or `notes.md` already exist, read them and extend them.
 
 # Procedure
@@ -31,7 +31,7 @@ the guide teaches comes from `notes.md`, so research quality decides guide quali
    the guide without the docs:
    - exact commands and installation steps, with versions;
    - configuration keys and what each does;
-   - key behavior and the reasoning behind it ("why it works this way");
+   - key behavior and the reasoning behind it;
    - pitfalls and version-specific traps (breaking changes, deprecated options);
    - what the learner should see when it works.
    Write in your own words; commands and short syntax may be verbatim. Never
@@ -40,18 +40,18 @@ the guide teaches comes from `notes.md`, so research quality decides guide quali
    they apply to.
 
 # Output
-`trails/<slug>/sources.md`:
+`agent-mem/<slug>/sources.md`:
 ~~~
-# Sources — <Topic>
+# Sources: <Topic>
 | ID | Title | URL | Type | Version | Lang | Status |
 |----|-------|-----|------|---------|------|--------|
 ## Gaps
 - (subtopics without a verified source)
 ~~~
 
-`trails/<slug>/notes.md`:
+`agent-mem/<slug>/notes.md`:
 ~~~
-# Notes — <Topic>
+# Notes: <Topic>
 ## <Subtopic 1>
 - <fact, command, flag or behavior> [S1]
 - Pitfall: <trap> [S2]

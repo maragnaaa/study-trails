@@ -1,16 +1,18 @@
 ---
 name: step-expansion
-description: Writes the approved guide one block at a time, replacing each PENDING marker in the main guide with numbered steps and creating the planned sub-guides, always in the guide's language and only from notes.md. Use in the EXPANSION phase, after approval is recorded in state.md. Also use to rewrite a specific block or sub-guide on the learner's request.
+description: Writes the approved guide one block at a time, replacing each PENDING marker in the main guide with numbered steps and creating the planned sub-guides, always in the guide's language and only from notes.md. Use in the EXPANSION phase, after approval is recorded in state.md. Also use to rewrite a specific step, block or sub-guide on the learner's request.
 ---
 
 # Preconditions (verify before writing anything)
-1. Read `state.md`. If `outline_approval` is not `approved`, STOP and go back to
-   the `trail-outline` skill. Take `language` and `kind` from it.
-2. Read `profile.md` and `plan.md`.
+1. Read `agent-mem/<slug>/state.md`. If `outline_approval` is not `approved`,
+   STOP and go back to the `trail-outline` skill. Take `language` and `kind`
+   from it.
+2. Read `profile.md` and `plan.md` in the same folder.
 3. Pick the unit: the first `pending` block in the `state.md` table (the
    `closing` row comes last), or the one the learner asked for.
 4. Read the `notes.md` sections relevant to that block and the last steps of the
-   previous block (continuity: do not repeat, refer back: "as in step 4").
+   previous block in the main guide (continuity: do not repeat, refer back:
+   "as in step 4").
 5. If a fact you need is not in `notes.md`: load `source-research`, add it,
    then continue. Never fill gaps from memory.
 
@@ -50,35 +52,35 @@ sentences. Name the exact file, folder, command or setting.>
 - Calibrate to the profile: do not explain what the learner already knows.
 - Write everything in the guide's language. Keep code, identifiers, commands
   and official names untranslated.
+- Apply the writing style of the agent prompt (section 9). Hard bans: em dash,
+  en dash, emojis, exclamation marks. No narrator openers, no summary closers,
+  no filler or hype words.
 
 # Style of a sub-guide: trails/<slug>/<name>.md
 ~~~
 <Guide to> <what it creates or explains>
 
 - Imperative bullet: what to import, create, configure or call.
-- Next bullet...
+- Next bullet.
 - Last bullet: how to export it or how to confirm it works.
 ~~~
 5 to 15 bullets, same rules as steps (no full solutions, no links to learn
-from). Optional callouts. No frontmatter.
+from, same style bans). Optional callouts. No frontmatter, no HTML comments.
 
-# Writing a block (idempotent order; the marker replacement is the commit)
+# Writing a block (the marker replacement is the commit)
 1. Write every sub-guide planned for the block's steps (create or overwrite the
    file in `trails/<slug>/`).
-2. Replace the marker `<!-- PENDING:block-NN -->` in the main guide, with one
-   targeted edit, by:
-   ~~~
-   <!-- START:block-NN -->
-   (the steps of the block)
-   <!-- END:block-NN -->
-   ~~~
-3. Verify with `grep`: `START:block-NN` exists, `PENDING:block-NN` does not.
-   Verify with `glob` that every `[[name]]` used in the block has a file.
+2. Replace the marker `<!-- PENDING:block-NN -->` in the main guide with the
+   steps of the block, using one targeted edit. The marker is unique, so use it
+   alone as the text to replace. Leave no comment or marker behind.
+3. Verify with `grep`: `PENDING:block-NN` must not exist and the heading of the
+   block's first step (`### N.`) must exist. Verify with `glob` that every
+   `[[name]]` used in the block has a file in `trails/<slug>/`.
 4. If the session died before step 2, the marker is still PENDING: just redo
    the block from step 1.
 
 # The closing unit (last)
-Replace `<!-- PENDING:closing -->` with START/END markers around:
+Replace `<!-- PENDING:closing -->` with:
 - `build`: `## <Final structure>`: a code-block tree of the finished project,
   one short comment per item, derived from the steps that were written.
   `concept`: `## <Cheat sheet>`: a table of the key terms, commands or rules
@@ -87,8 +89,9 @@ Replace `<!-- PENDING:closing -->` with START/END markers around:
   sources from `sources.md`, optionally tagged with the source language.
 
 # Rewriting
-To rewrite a block, replace the content between its `START` and `END`, keeping
-the markers; rewrite its sub-guide files too. Keep step numbers unchanged.
+To rewrite a step, replace it in place, using its `### N.` heading as the
+anchor and keeping its number. To rewrite a block, rewrite its steps one by one
+and update its sub-guide files. Never leave markers behind.
 
 # State update
 - Mark the unit `expanded` in the `state.md` Blocks table and update `next_step`.
