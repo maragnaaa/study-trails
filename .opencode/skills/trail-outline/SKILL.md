@@ -1,59 +1,108 @@
 ---
 name: trail-outline
-description: Creates trail.md with a mermaid mind map, prerequisites, a table of 5 to 8 modules with dependencies and PENDING markers, in the learner's language, then runs the approval step. Use in the OUTLINE and AWAITING_APPROVAL phases, after research and before expanding any module.
+description: Creates plan.md (numbered steps, blocks, sub-guides, diagram) and the main guide skeleton with PENDING block markers, in the learner's language, then runs the approval step. Use in the OUTLINE and AWAITING_APPROVAL phases, after research and before writing any step.
 ---
 
 # Preconditions
-- Read `profile.md`, `sources.md` and `state.md`. Phase must be OUTLINE or
-  AWAITING_APPROVAL. Take `language` from `state.md`.
+- Read `profile.md`, `sources.md`, `notes.md` and `state.md`. Phase must be
+  OUTLINE or AWAITING_APPROVAL. Take `language` and `kind` from `state.md`.
 
-# Sizing
-- Total hours consistent with `hours per week × deadline` from the profile.
-- 5 to 8 modules, each between 2 and 12 hours. What does not fit goes under "Going further".
-- Acyclic dependencies: module 1 depends on nothing, and no module uses
-  something that only appears later.
+# Planning rules
+- Size the scope to the profile (hours per week × deadline). Narrow and
+  complete beats broad and shallow.
+- 3 to 6 blocks and 10 to 30 steps in total. Steps are numbered continuously
+  across blocks (1, 2, 3...). Excess scope becomes a suggested follow-up trail.
+- Order: each step may use only what earlier steps introduced or what the
+  "Before you start" section assumes.
+- `build` guides: steps follow the order in which a person would actually build
+  it (setup, foundations, repeated units, wiring, run). `concept` guides:
+  steps follow the dependency order of ideas, each with a concrete example.
+- Sub-guide rule: a step gets its own sub-guide when it is a self-contained
+  artifact (a file to create, a configuration unit) or a concept deep dive that
+  would need more than about 8 lines. Everything else stays inline.
+- Sub-guide names: the artifact's real name (e.g. `env.js`) or a short
+  kebab-case name. Must be unique: `glob` `trails/**/<name>.md` first, and if
+  it exists in another trail, make the name more specific. Never use `state`,
+  `profile`, `plan`, `notes`, `sources` or the slug.
 
-# Language tables (headings of trail.md)
-Use the column of the stored `language`. Never mix languages in one document.
-
+# Language tables (use the column of the stored language; never mix languages)
 | Element | en | pt-BR | es |
 |---|---|---|---|
-| Title prefix | Trail | Trilha | Ruta |
-| Header line | Starting level · Goal · Total time | Nível de partida · Objetivo · Tempo total | Nivel de partida · Objetivo · Tiempo total |
-| Mind map | Mind map | Mapa mental | Mapa mental |
-| Prerequisites | Prerequisites | Pré-requisitos | Requisitos previos |
-| Overview | Overview | Visão geral | Visión general |
-| Overview columns | No. · Module · Depends on · Hours · Practice | Nº · Módulo · Depende de · Horas · Prática | N.º · Módulo · Depende de · Horas · Práctica |
-| Stage | Stage | Etapa | Etapa |
-| Capstone project | Capstone project | Projeto integrador | Proyecto integrador |
-| Common pitfalls | Common pitfalls | Armadilhas comuns | Errores comunes |
-| Going further | Going further | Para ir além | Para ir más allá |
-| Glossary | Glossary | Glossário | Glosario |
+| Stack (build) | Stack | Stack | Stack |
+| Core concepts (concept) | Core concepts | Conceitos-chave | Conceptos clave |
+| Before you start | Before you start | Antes de começar | Antes de empezar |
+| Final structure (build) | Final structure | Estrutura final | Estructura final |
+| Cheat sheet (concept) | Cheat sheet | Resumo rápido | Resumen rápido |
+| References | References | Referências | Referencias |
 
-# Exact structure of trails/<slug>/trail.md
-1. `# 🧭 <Title prefix>: <Topic>` and one header line (starting level · goal · total time).
-2. `## <Mind map>` with a ```mermaid mindmap block:
-   - root as `root((Topic))`, 2-space indentation;
-   - short nodes, NO parentheses, colons, quotes or commas inside nodes.
-3. `## <Prerequisites>` as a `- [ ]` checklist, with review links (only from `sources.md`).
-4. `## <Overview>` with a table (columns from the language table).
-5. For each module, exactly:
-   ```
-   ## <Stage> 01 — <name>
-   <!-- PENDING:module-01 -->
-   ```
-   (two-digit numbering; never change the marker format; markers stay in English)
-6. Final sections: `## <Capstone project>`, `## <Common pitfalls>`,
-   `## <Going further>`, `## <Glossary>` (they may hold a short placeholder until validation).
+# File 1: trails/<slug>/plan.md (the artifact the learner approves)
+~~~
+# Plan — <Topic>
+- Kind: <build | concept> · Language: <code> · Level: <starting level>
+
+## <Stack | Core concepts>
+- **Name** → one-line role
+
+## Steps
+| No. | Step | Block | Sub-guide | What the learner does or learns |
+|-----|------|-------|-----------|---------------------------------|
+
+## Diagram (draft)
+(mermaid; see rules)
+
+## Closing
+- build: planned final folder structure (tree)
+- concept: planned cheat-sheet rows
+~~~
+Diagram rules: `flowchart LR` for processes and data flow, `mindmap` for concept
+hierarchies. Short labels, no parentheses, quotes or colons inside labels
+(except the cylinder syntax for databases). The diagram must only show things
+the guide teaches.
+
+# File 2: main guide skeleton, trails/<slug>/<slug>.md
+~~~
+---
+topic: <Topic>
+language: <code>
+level: <starting level>
+kind: <build | concept>
+---
+# <Guide title in the learner's language>
+
+<2 to 3 sentences: what the learner will build or understand, and for whom>
+
+## <Stack | Core concepts>
+- **Name** → one-line role
+
+## <Before you start>
+- assumed knowledge and tools (short; no links)
+
+---
+<!-- PENDING:block-01 -->
+
+---
+<!-- PENDING:block-02 -->
+
+(one marker per block, separated by `---`)
+
+---
+## <Diagram title specific to the topic, e.g. "Request flow">
+(mermaid from plan.md)
+
+<!-- PENDING:closing -->
+~~~
+Do not write any step text here; step headings and content are written by the
+`step-expansion` skill.
 
 # Approval (mandatory gate)
-1. Update `state.md`: fill the "Modules" table (all `pending`),
-   `phase: AWAITING_APPROVAL`, `next_step: wait for learner approval`.
-2. To the learner, in their chat language, show ONLY: the modules (name, hours,
-   dependency), the total time and the file path. Ask them to reply with an
-   approval word or say what to adjust.
-3. If they ask for adjustments: edit `trail.md` and the module table in
-   `state.md`, record the request under "Learner decisions", and ask again.
-4. Only on an explicit approval (see the approval words in the agent prompt):
-   set in `state.md` `outline_approval: approved`, `phase: EXPANSION`,
-   `next_step: expand module-01`.
+1. Update `state.md`: fill the "Blocks" table (all `pending`, plus a `closing`
+   row), `phase: AWAITING_APPROVAL`, `next_step: wait for learner approval`.
+2. To the learner, in their chat language, show ONLY: the steps grouped by
+   block (number, title, sub-guide if any), the diagram idea in one line, and the
+   paths of `plan.md` and the main guide. Ask them to reply with an approval word
+   or say what to adjust.
+3. If they ask for adjustments: edit `plan.md`, the markers/diagram in the main
+   guide skeleton and the Blocks table in `state.md`; record the request under
+   "Learner decisions"; ask again.
+4. Only on an explicit approval: set in `state.md` `outline_approval: approved`,
+   `phase: EXPANSION`, `next_step: expand block-01`.
