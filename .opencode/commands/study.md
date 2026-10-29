@@ -7,7 +7,7 @@ Requested topic: $ARGUMENTS
 Procedure:
 1. If the topic above is empty, ask only for the topic (in the language the
    learner is writing in) and stop.
-2. Derive the slug (rules in your prompt). Use `glob` on `trails/*/state.md`,
+2. Derive the slug (rules in your prompt). Use `glob` on `agent-mem/*/state.md`,
    read the `topic` field of each existing trail, and check whether the same
    topic already exists (it may be under a slug in another language).
 3. If it exists: run the resume protocol and ask whether to continue where it

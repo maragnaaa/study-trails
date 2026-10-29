@@ -1,0 +1,25 @@
+{
+  "name": "study-trails",
+  "version": "0.1.1",
+  "description": "Study-trails installer",
+  "homepage": "https://github.com/maragnaaa/study-trails#readme",
+  "bugs": {
+    "url": "https://github.com/maragnaaa/study-trails/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maragnaaa/study-trails.git"
+  },
+  "license": "MIT",
+  "author": "Gustavo Maragna",
+  "bin": {
+    "study-trails": "./bin/install.js"
+  },
+  "files": [
+    "bin",
+    ".opencode"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
